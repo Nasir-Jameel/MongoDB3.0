@@ -1,0 +1,62 @@
+Authentication: (Proof)
+    User ko profile dene sa pehly yeh check karna hota ha k user hai kon ?
+              
+Authorized to perform some tasks which are only allowed to be executed by the admin.
+yai yeh check karna k kis kis user k pass konsa right ha ( admin wala ya sirf user wala)
+
+concept of cookies and session : 
+Server har bar bhool jata ha k ap kon ho ,ab kyonki server bhool jata ha k ap kon ho to har bar wo har kam k liya aapse puchega aap kon ho. Aesa na ho is liya cookies and session ka concept istemal hota ha. 
+            
+Most important things to learn:
+i: cookies kesy set hoty hain 
+ii: bcrypt kaisy use karty hain for password encryption and decryption(compare)
+iii: jwt kya ha aur jwt ma kesy deta store karty hain or bahir kesy nikalty hain.
+
+start from fresh folder:
+i: cookies kesy set karty hain and read karty hain.  
+npm init -y   //set app.js instead of index.js
+npm i jsonwebtoken bcrypt
+npm i express
+
+app.get('/', (req,res)=>{
+    res.cookie("name", "nasirJameel")      // cookie ka matlb ha server sa browser pa kuch deta store karwa dena
+    res.send("done")
+})
+
+app.get('/read (req,res)=>{
+   res.send("hey")       // chahy jitni marzi requests browser sa bhaijo( like karny ki, comment karny ki etc) jo cookie ap na set ki wo default hamesha us k request k sath attach ho k jaey gi.
+})
+
+to read cookie on console:
+we have to : npm i cookie-parser
+then:  
+require cookie-parser    //on top of app.js
+
+const CookieParser = require ('cookie-parser')
+app.use(cookieParser)
+
+now : read it in app.get of read by 
+console.log(req.cookies)
+res.send("read Page)
+
+ii: bcrypt (encryption and decryption)
+(a) encryption: sab sa pehly salt set kiya jata ha (ant shant string) phir us ko Hash(hamary password ka antshant string) k sath mila diya jata ha ta k hack na ho saky .
+(b) decryption(compare) : jab hum login karty hain to server ap k login karty waqt waly password  ko Hash ma badal k pehly Hash k sath compare karta ha. Agar pehly password ka Hash abhi k Hash k sath match kar gya to login ho jaey ga.
+(c) jwt :  jwt teen cheezon sa mil k banta ha: 
+i:  Algorithm and Token Type
+ii: Data    //Most important Part
+iii: Verify Signature 
+now: 
+const jwt = require ('jsonwebtoken')
+const CookieParser = require('cookieparser')
+app.use(cookieParser())
+app.get('/',(req, res){
+    let Token = jwt.sign({email: nasir@gmail.com}, "secret")
+    res.cookie("token",Token)
+    res.send (done);
+})
+app/.get('/read', (req,res){
+    console.log(req.cookie.token)
+   let data =  jwt.Verify(req.cookies.token, "secret");
+    console.log(data)
+})
